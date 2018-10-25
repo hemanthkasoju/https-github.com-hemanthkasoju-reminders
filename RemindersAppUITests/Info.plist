@@ -16,7 +16,11 @@
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
-	<key>CFBundleVersion</key>
-	<string>1</string>
+	<key>privacy</key>
+	<string></string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>To access pics</string>
+	<key>NSCameraUsageDescription</key>
+	<string>To take pics</string>
 </dict>
 </plist>
