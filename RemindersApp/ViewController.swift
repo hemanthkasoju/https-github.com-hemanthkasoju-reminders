@@ -15,8 +15,6 @@ class ViewController: UIViewController, UITextFieldDelegate, UIPickerViewDataSou
     @IBOutlet weak var reminderName: UILabel!
     @IBOutlet weak var dueDateAndTime: UITextField!
     @IBOutlet weak var priorityTextField: UITextField!
-    
-  
     @IBOutlet weak var reminderImage: UIImageView!
     
     private var datePicker: UIDatePicker?
