@@ -15,34 +15,35 @@ class ReminderTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        loadSampleReminders();
     }
 
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        return reminders.count;
     }
 
-    /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+        let cellIdentifier = "reminderTableViewCell"
+        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? ReminderTableViewCell  else {
+            fatalError("The dequeued cell is not an instance of ReminderTableViewCell.")
+        }
+        
+        
+        let reminder = reminders[indexPath.row];
+        cell.titleLabel.text = reminder.title;
+        cell.dueDateLabel.text = reminder.dueDate;
+        cell.Priority.text = reminder.priority;
+        cell.reminderImage.image = reminder.photo;
 
-        // Configure the cell...
-
-        return cell
+        return cell;
     }
-    */
 
     /*
     // Override to support conditional editing of the table view.
@@ -88,5 +89,35 @@ class ReminderTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    func loadSampleReminders(){
+        let photo1 = UIImage(named: "defaultPhoto");
+        guard let reminder1 = Reminder(title : "MC class", currentDate : "22/01/18", dueDate : "String", photo : photo1, priority : "High", notes : "Attend class") else {
+            fatalError("Unable to instantiate reminder1")
+        }
+        
+        let photo2 = UIImage(named: "defaultPhoto");
+        guard let reminder2 = Reminder(title : "MC class", currentDate : "22/01/18", dueDate : "String", photo : photo2, priority : "High", notes : "Attend class") else {
+            fatalError("Unable to instantiate reminder2")
+        }
+        
+        let photo3 = UIImage(named: "defaultPhoto");
+        guard let reminder3 = Reminder(title : "MC class", currentDate : "22/01/18", dueDate : "String", photo : photo3, priority : "High", notes : "Attend class") else {
+            fatalError("Unable to instantiate reminder3")
+        }
+        
+        reminders += [reminder1,reminder2, reminder3];
+    }
+    
+    @IBAction func unwindToReminderList(sender: UIStoryboardSegue) {
+        if let sourceViewController = sender.source as? ReminderViewController, let reminder = sourceViewController.reminder {
+            
+            // Add a new reminder.
+            let newIndexPath = IndexPath(row: reminders.count, section: 0)
+            
+            reminders.append(reminder)
+            tableView.insertRows(at: [newIndexPath], with: .automatic)
+        }
+    }
 
 }

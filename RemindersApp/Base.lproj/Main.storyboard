@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ZDQ-HA-Z0R">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="AkL-sT-Jdu">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -9,10 +9,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Table View Controller-->
+        <!--Your Reminders-->
         <scene sceneID="Phb-wg-785">
             <objects>
-                <tableViewController id="ZDQ-HA-Z0R" sceneMemberID="viewController">
+                <tableViewController id="ZDQ-HA-Z0R" customClass="ReminderTableViewController" customModule="RemindersApp" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="100" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="ILn-U5-Z4f">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -67,15 +67,22 @@
                             <outlet property="delegate" destination="ZDQ-HA-Z0R" id="eaw-u7-jhg"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" title="Your Reminders" id="UuU-QN-OSY">
+                        <barButtonItem key="rightBarButtonItem" title="Add" id="QaL-I3-SLV">
+                            <connections>
+                                <segue destination="5rl-vf-zms" kind="presentation" identifier="AddItem" id="iFV-m0-ci3"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="u3D-gC-mE1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2794.4000000000001" y="45.42728635682159"/>
+            <point key="canvasLocation" x="-1975.2" y="45.42728635682159"/>
         </scene>
-        <!--View Controller-->
+        <!--New Reminder-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="RemindersApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ReminderViewController" customModule="RemindersApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -182,18 +189,68 @@
                         </accessibility>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <navigationItem key="navigationItem" title="New Reminder" id="sL5-fN-ysJ">
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="cs4-Cj-smf">
+                            <connections>
+                                <action selector="cancel:" destination="BYZ-38-t0r" id="shg-Tq-OXN"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Save" id="rmb-J9-PPI">
+                            <connections>
+                                <segue destination="cZd-Pe-1Ca" kind="unwind" unwindAction="unwindToReminderListWithSender:" id="5h4-qN-cR3"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="currentDateAndTime" destination="yvN-tL-v5r" id="jMA-i5-gYS"/>
                         <outlet property="dueDateAndTime" destination="Cgy-ih-QMp" id="sla-Vb-jr4"/>
+                        <outlet property="notesTextField" destination="RZ9-Fv-8fp" id="UdF-yX-8lq"/>
                         <outlet property="priorityTextField" destination="YJN-3c-NOK" id="tO6-mO-6kP"/>
                         <outlet property="reminderImage" destination="sM8-Zc-8UU" id="Aq0-QK-b7n"/>
-                        <outlet property="reminderName" destination="IEs-bY-qgR" id="YhM-xE-3ak"/>
                         <outlet property="reminderNameText" destination="5CL-Bw-82i" id="a6b-0d-FVk"/>
+                        <outlet property="saveButton" destination="rmb-J9-PPI" id="dDh-OX-ai2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <exit id="cZd-Pe-1Ca" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-2087.1999999999998" y="46.326836581709152"/>
+            <point key="canvasLocation" x="-527" y="45"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="bLD-MC-yPY">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="AkL-sT-Jdu" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="24u-NX-WfJ">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="ZDQ-HA-Z0R" kind="relationship" relationship="rootViewController" id="hNR-Eg-b97"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gPm-cD-nBm" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2686" y="45"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="snn-aG-oXO">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="5rl-vf-zms" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="hfq-iN-lx9">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="k5S-mC-guj"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uUd-7R-g1m" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1242.4000000000001" y="44.527736131934034"/>
         </scene>
     </scenes>
     <resources>

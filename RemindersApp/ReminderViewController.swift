@@ -1,26 +1,33 @@
 //
-//  ViewController.swift
+//  ReminderViewController.swift
 //  RemindersApp
 //
 //  Created by Hemanth Kasoju on 2018-10-22.
 //  Copyright © 2018 Hemanth Kasoju. All rights reserved.
 //
 
-import UIKit
+import UIKit;
+import os.log;
 
-class ViewController: UIViewController, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    @IBOutlet weak var reminderNameText: UITextField!
+class ReminderViewController: UIViewController, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    @IBOutlet weak var reminderNameText: UITextField!
     @IBOutlet weak var currentDateAndTime: UITextField!
-    @IBOutlet weak var reminderName: UILabel!
     @IBOutlet weak var dueDateAndTime: UITextField!
     @IBOutlet weak var priorityTextField: UITextField!
     @IBOutlet weak var reminderImage: UIImageView!
+    @IBOutlet weak var notesTextField: UITextField!
     
     private var datePicker: UIDatePicker?
     var priority = ["High", "Medium", "Low"];
     var picker = UIPickerView();
+    var reminder : Reminder?
+    @IBOutlet weak var saveButton: UIBarButtonItem!
     
+    @IBAction func cancel(_ sender: UIBarButtonItem) {
+        dismiss(animated: true, completion: nil)
+
+    }
     @IBAction func chooseImage(_ sender: Any) {
         let imagePickerController = UIImagePickerController();
         imagePickerController.delegate = self;
@@ -50,18 +57,20 @@ class ViewController: UIViewController, UITextFieldDelegate, UIPickerViewDataSou
         picker.dismiss(animated: true, completion: nil);
     }
     
-
-    
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil);
     }
     override func viewDidLoad() {
         super.viewDidLoad();
-        // Do any additional setup after loading the view, typically from a nib.
+        // Handle the text field’s user input through delegate callbacks.
         reminderNameText.delegate = self;
+        
         printCurrentDateAndTime();
         setDateAndTime();
         showPriority();
+        
+        // Enable the Save button only if the text field has a valid Meal name.
+        updateSaveButtonState();
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -71,8 +80,16 @@ class ViewController: UIViewController, UITextFieldDelegate, UIPickerViewDataSou
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        reminderName.text = textField.text
+        updateSaveButtonState();
+        navigationItem.title = reminderNameText.text
+        
     }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        // Disable the Save button while editing.
+        saveButton.isEnabled = false
+    }
+    
     func printCurrentDateAndTime(){
         
         let formatter = DateFormatter();
@@ -86,25 +103,28 @@ class ViewController: UIViewController, UITextFieldDelegate, UIPickerViewDataSou
     func setDateAndTime(){
         var datePicker = UIDatePicker();
         datePicker.datePickerMode = .dateAndTime;
-        datePicker.addTarget(self, action: #selector(ViewController.dateChanged(datePicker:)), for: .valueChanged)
+        datePicker.addTarget(self, action: #selector(ReminderViewController.dateChanged(datePicker:)), for: .valueChanged)
         dueDateAndTime.inputView = datePicker;
-        
+        updateSaveButtonState();
+
     }
     
     @objc func  dateChanged(datePicker: UIDatePicker) {
         let formatter = DateFormatter();
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ViewController.viewTapped(gestureRecognizer:)))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ReminderViewController.viewTapped(gestureRecognizer:)))
         view.addGestureRecognizer(tapGesture);
         formatter.dateStyle = .long;
         formatter.timeStyle = .medium;
         let str = formatter.string(from: datePicker.date);
         dueDateAndTime.text = str;
         view.endEditing(true);
-        
+        updateSaveButtonState();
+
     }
     
     @objc func viewTapped(gestureRecognizer: UITapGestureRecognizer){
         view.endEditing(true);
+        updateSaveButtonState();
     }
     
   
@@ -120,10 +140,12 @@ class ViewController: UIViewController, UITextFieldDelegate, UIPickerViewDataSou
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         priorityTextField.text = priority[row];
         view.endEditing(true);
-        
+        updateSaveButtonState();
+
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        updateSaveButtonState();
         return priority[row];
     }
     
@@ -133,6 +155,40 @@ class ViewController: UIViewController, UITextFieldDelegate, UIPickerViewDataSou
         priorityTextField.inputView = picker;
         view.endEditing(true);
 
+    }
+        
+        override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+            
+            super.prepare(for: segue, sender: sender)
+            
+            // Configure the destination view controller only when the save button is pressed.
+            guard let button = sender as? UIBarButtonItem, button === saveButton else {
+                os_log("The save button was not pressed, cancelling", log: OSLog.default, type: .debug)
+                return
+            }
+
+            let title = reminderNameText.text ?? "";
+            let currentDate = currentDateAndTime.text ?? "";
+            let dueDate = dueDateAndTime.text ?? "";
+            let photo = reminderImage.image;
+            let priority = priorityTextField.text ?? "";
+            let notes = notesTextField.text ?? "";
+            
+           
+            
+            // Set the reminder to be passed to MealTableViewController after the unwind segue.
+            reminder = Reminder(title : title, currentDate : currentDate, dueDate : dueDate, photo : photo, priority : priority, notes : notes)
+    }
+    
+    private func updateSaveButtonState() {
+        // Disable the Save button if the text field is empty.
+        let reminderNametext = reminderNameText.text ?? ""
+        let dueDateText = dueDateAndTime.text ?? ""
+        let priorityText = priorityTextField.text ?? ""
+
+        if !reminderNametext.isEmpty && !dueDateText.isEmpty && !priorityText.isEmpty{
+            saveButton.isEnabled = true;
+        }
     }
     
     
