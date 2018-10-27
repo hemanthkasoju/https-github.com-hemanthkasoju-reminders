@@ -65,6 +65,17 @@ class ReminderViewController: UIViewController, UITextFieldDelegate, UIPickerVie
         // Handle the text field’s user input through delegate callbacks.
         reminderNameText.delegate = self;
         
+        // Set up views if editing an existing Meal.
+        if let reminder = reminder {
+            navigationItem.title = reminder.title
+            reminderNameText.text   = reminder.title
+            reminderImage.image = reminder.photo
+            priorityTextField.text = reminder.priority
+            dueDateAndTime.text = reminder.dueDate
+            currentDateAndTime.text = reminder.currentDate
+            notesTextField.text = reminder.notes
+        }
+        
         printCurrentDateAndTime();
         setDateAndTime();
         showPriority();
