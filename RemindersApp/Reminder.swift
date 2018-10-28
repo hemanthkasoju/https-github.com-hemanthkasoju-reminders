@@ -17,6 +17,8 @@ class Reminder {
     var priority : String;
     var notes : String;
     
+    
+    
     init?(title : String, currentDate : String, dueDate : String, photo : UIImage?, priority : String, notes : String ) {
         
         if title.isEmpty || dueDate.isEmpty || priority.isEmpty{
