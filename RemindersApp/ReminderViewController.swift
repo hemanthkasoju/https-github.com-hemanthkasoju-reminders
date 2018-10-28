@@ -204,11 +204,12 @@ class ReminderViewController: UIViewController, UITextFieldDelegate, UIPickerVie
     
     private func updateSaveButtonState() {
         // Disable the Save button if the text field is empty.
-        let reminderNametext = reminderNameText.text ?? ""
-        let dueDateText = dueDateAndTime.text ?? ""
-        let priorityText = priorityTextField.text ?? ""
+        saveButton.isEnabled = false;
+        let reminderNametext = reminderNameText.text ?? nil
+        let dueDateText = dueDateAndTime.text ?? nil
+        let priorityText = priorityTextField.text ?? nil
 
-        if !reminderNametext.isEmpty && !dueDateText.isEmpty && !priorityText.isEmpty{
+        if !reminderNametext!.isEmpty && !dueDateText!.isEmpty && !priorityText!.isEmpty{
             saveButton.isEnabled = true;
         }
     }
