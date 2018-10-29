@@ -79,8 +79,7 @@ class ReminderViewController: UIViewController, UITextFieldDelegate, UIPickerVie
         imageScrollView.minimumZoomScale = minScale
         imageScrollView.maximumZoomScale = 1
         imageScrollView.zoomScale = minScale
-        
-        centerScrollViewContents();
+        centerScrollViewContents(); // Changes
         
         picker.dismiss(animated: true, completion: nil);
     }
