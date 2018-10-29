@@ -9,7 +9,7 @@
 import UIKit;
 import os.log;
 
-class ReminderViewController: UIViewController, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ReminderViewController: UIViewController, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIScrollViewDelegate {
     
     @IBOutlet weak var reminderNameText: UITextField!
     @IBOutlet weak var currentDateAndTime: UITextField!
@@ -24,6 +24,7 @@ class ReminderViewController: UIViewController, UITextFieldDelegate, UIPickerVie
     var reminder : Reminder?
     @IBOutlet weak var saveButton: UIBarButtonItem!
     
+    @IBOutlet weak var imageScrollView: UIScrollView!
     @IBAction func cancel(_ sender: UIBarButtonItem) {
         // Depending on style of presentation (modal or push presentation), this view controller needs to be dismissed in two different ways.
         let isPresentingInAddMealMode = presentingViewController is UINavigationController
@@ -65,7 +66,50 @@ class ReminderViewController: UIViewController, UITextFieldDelegate, UIPickerVie
         let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage;
         reminderImage.image = image;
         
+        reminderImage.contentMode = UIView.ContentMode.center
+        reminderImage.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: image.size.width, height: image.size.height))
+        
+        imageScrollView.contentSize = image.size
+        
+        let scrollViewFrame = imageScrollView.frame
+        let scaleWidth = scrollViewFrame.size.width / imageScrollView.contentSize.width
+        let scaleHeight = scrollViewFrame.size.height / imageScrollView.contentSize.height
+        let minScale = min(scaleHeight, scaleWidth)
+        
+        imageScrollView.minimumZoomScale = minScale
+        imageScrollView.maximumZoomScale = 1
+        imageScrollView.zoomScale = minScale
+        
+        centerScrollViewContents();
+        
         picker.dismiss(animated: true, completion: nil);
+    }
+    
+    func centerScrollViewContents() {
+        let boundsSize = imageScrollView.bounds.size
+        var contentsFrame = reminderImage.frame
+        
+        if contentsFrame.size.width < boundsSize.width{
+            contentsFrame.origin.x = (boundsSize.width - contentsFrame.size.width) / 2
+        }else{
+            contentsFrame.origin.x = 0
+        }
+        
+        if contentsFrame.size.height < boundsSize.height{
+            contentsFrame.origin.y = (boundsSize.height - contentsFrame.size.height) / 2
+        }else{
+            contentsFrame.origin.y = 0
+        }
+        
+        reminderImage.frame = contentsFrame
+    }
+    
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        centerScrollViewContents()
+    }
+    
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return reminderImage
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -75,7 +119,8 @@ class ReminderViewController: UIViewController, UITextFieldDelegate, UIPickerVie
         super.viewDidLoad();
         // Handle the text field’s user input through delegate callbacks.
         reminderNameText.delegate = self;
-        
+        imageScrollView.delegate = self
+
         // Set up views if editing an existing Meal.
         if let reminder = reminder {
             navigationItem.title = reminder.title
@@ -87,12 +132,35 @@ class ReminderViewController: UIViewController, UITextFieldDelegate, UIPickerVie
             notesTextField.text = reminder.notes
         }
         
+        reminderImage.frame = CGRect(x: 0, y: 0, width: imageScrollView.frame.size.width, height: imageScrollView.frame.size.height)
+        // reminderImage.image = UIImage(named: "Image")
+        reminderImage.isUserInteractionEnabled = true
+        
+        imageScrollView.addSubview(reminderImage)
+        
+//        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.loadImage(recognizer:)))
+//        tapGestureRecognizer.numberOfTapsRequired = 1
+//        reminderImage.addGestureRecognizer(tapGestureRecognizer)
+
         printCurrentDateAndTime();
         setDateAndTime();
         showPriority();
         
         // Enable the Save button only if the text field has a valid Meal name.
         updateSaveButtonState();
+    }
+    
+    
+    @objc func loadImage(recognizer: UITapGestureRecognizer) {
+        
+        let imagePicker = UIImagePickerController()
+        
+        imagePicker.delegate = self
+        
+        imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
+        
+        self.present(imagePicker, animated: true, completion: nil)
+        
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -213,6 +281,7 @@ class ReminderViewController: UIViewController, UITextFieldDelegate, UIPickerVie
             saveButton.isEnabled = true;
         }
     }
+    
     
     
 }

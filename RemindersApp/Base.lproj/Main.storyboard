@@ -95,8 +95,8 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Image :" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u49-0h-Ogt">
-                                <rect key="frame" x="16" y="458" width="56" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u49-0h-Ogt">
+                                <rect key="frame" x="16" y="458" width="0.0" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
@@ -182,6 +182,10 @@
                                     <action selector="chooseImage:" destination="BYZ-38-t0r" eventType="touchUpInside" id="xhC-v1-x9L"/>
                                 </connections>
                             </button>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qXi-Qs-dku">
+                                <rect key="frame" x="67" y="469" width="240" height="140"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </scrollView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <accessibility key="accessibilityConfiguration">
@@ -205,6 +209,7 @@
                     <connections>
                         <outlet property="currentDateAndTime" destination="yvN-tL-v5r" id="jMA-i5-gYS"/>
                         <outlet property="dueDateAndTime" destination="Cgy-ih-QMp" id="sla-Vb-jr4"/>
+                        <outlet property="imageScrollView" destination="qXi-Qs-dku" id="01K-7p-1ZY"/>
                         <outlet property="notesTextField" destination="RZ9-Fv-8fp" id="UdF-yX-8lq"/>
                         <outlet property="priorityTextField" destination="YJN-3c-NOK" id="tO6-mO-6kP"/>
                         <outlet property="reminderImage" destination="sM8-Zc-8UU" id="Aq0-QK-b7n"/>
@@ -215,7 +220,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
                 <exit id="cZd-Pe-1Ca" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-527" y="45"/>
+            <point key="canvasLocation" x="-527.20000000000005" y="44.527736131934034"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="bLD-MC-yPY">
